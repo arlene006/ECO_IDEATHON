@@ -5,51 +5,47 @@ The system uses YOLOv8 + ESRI Satellite Tiles + a custom inference pipeline to d
 
 📁 Repository Structure
 root/
-├──backend
-|  ├── pipeline/                   
-│       ├── pipeline_esri.py.py                
-│       ├── fetch_tile_esri.py         
-│       ├── fetch_tile_google.py    
-|       ├── train_yolo.py  
-|
-|  ├── batch_ouyputs/
-|     ├── overlay /              
-│     ├── tiles/
-|   └── predictions.json 
-|
-│   
-|              
-│  ├── runs\detect\solar_detector/
-│      ├── weights                     
-│          ├── best.pt 
-|
-|  ├── static\outputs /
-|
-|  ├── templates/
-|      ├── index.html
-|  
-|  ├── training_logs/
-│      ├── training_metrics.csv
-│      ├── loss_curve.png
-│      ├── f1_curve.png
-│      └── rmse_per_epoch.csv
-|  ├── app.py
-|
-|  ├── batch_predict.py
-|   
+├── backend/
+│   ├── pipeline/
+│   │   ├── __init__.py
+│   │   ├── fetch_tile_esri.py
+│   │   ├── fetch_tile_google.py
+│   │   ├── pipeline_esri.py
+│   │   ├── train_yolo.py
+│   │   └── export_training_logs.py
+│   │
+│   ├── batch_outputs/
+│   │   ├── overlays/
+│   │   ├── tiles/
+│   │   └── predictions.json
+│   │
+│   ├── runs/detect/solar_detector/
+│   │   └── weights/
+│   │       └── best.pt      ← (Tracked with Git LFS)
+│   │
+│   ├── static/outputs/
+│   ├── templates/
+│   │   └── index.html
+│   │
+│   ├── training_logs/
+│   │   ├── training_metrics.csv
+│   │   ├── loss_curve.png
+│   │   ├── f1_curve.png
+│   │   └── rmse_per_epoch.csv
+│   │
+│   ├── app.py
+│   └── batch_predict.py
+│
 ├── environment_details/
 │   ├── requirements.txt
 │   ├── environment.yml
-│   ├── python_version.txt
-│                    
+│   └── python_version.txt
 │
 ├── model_card/
-│   └── model_card.pdf             
-│          
+│   └── model_card.pdf
 │
-├
-|
 └── README.md
+
 
 🚀 1. Setup Instructions
 A. Using pip (Recommended)
