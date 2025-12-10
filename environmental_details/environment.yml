@@ -1,0 +1,15 @@
+name: solar-detection
+channels:
+  - defaults
+  - pytorch
+dependencies:
+  - python=3.10
+  - flask
+  - pillow
+  - requests
+  - numpy
+  - pandas
+  - pip
+  - pip:
+      - ultralytics==8.1.0
+      - opencv-python

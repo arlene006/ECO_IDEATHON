@@ -1,0 +1,96 @@
+<!-- backend/templates/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Solar Rooftop Detection</title>
+    <style>
+        :root {
+            --bg: #0f1724;
+            --card: #11151a;
+            --muted: #8892a2;
+            --accent: #06b6d4;
+            --panel: #0b0f13;
+        }
+        body { margin:0; font-family: Inter, Arial, sans-serif; background:var(--bg); color:#fff; }
+        .container { max-width:1000px; margin:40px auto; padding:20px; }
+        h1 { text-align:center; margin:6px 0 18px; font-size:32px; }
+        .card { background:var(--card); padding:18px; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,.6); }
+        form { display:flex; justify-content:center; gap:12px; align-items:center; margin-bottom:18px; }
+        input[type="text"] { width:180px; padding:8px 10px; border-radius:6px; border:1px solid #2b3440; background:#0b1116; color:#fff; }
+        button { background:var(--accent); color:#032; border:none; padding:10px 16px; border-radius:10px; cursor:pointer; font-weight:600; }
+        .results { margin-top:20px; text-align:center; }
+        .images { display:flex; justify-content:center; gap:24px; margin-bottom:10px; flex-wrap:wrap; }
+        .images img { width:360px; max-width:45vw; border-radius:8px; border:2px solid #24303a; background:#081017; }
+        pre { text-align:left; background:#001218; color:#00ffcc; padding:18px; border-radius:8px; overflow:auto; max-height:360px; }
+        .note { color:var(--muted); margin-top:8px; font-size:13px; text-align:center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Solar Rooftop Detection</h1>
+
+        <div class="card">
+            <form id="predictForm">
+                <input type="text" name="latitude" placeholder="Latitude (e.g. 28.6261)" required>
+                <input type="text" name="longitude" placeholder="Longitude (e.g. 77.2188)" required>
+                <button type="submit">Run Detection</button>
+            </form>
+
+            <div class="results" id="results" style="display:none;">
+                <div class="images">
+                    <div>
+                        <div style="color:#9fb3c6;margin-bottom:6px;font-weight:600">Tile image (center)</div>
+                        <img id="tileImg" src="" alt="Tile image">
+                    </div>
+                    <div>
+                        <div style="color:#9fb3c6;margin-bottom:6px;font-weight:600">Overlay image (detections)</div>
+                        <img id="overlayImg" src="" alt="Overlay image">
+                    </div>
+                </div>
+
+                <h3 style="margin-top:6px;">JSON Output</h3>
+                <pre id="jsonOut">{ }</pre>
+                <div class="note">Note: If overlay image is empty or contains no boxes, model found no solar at this zoom/area.</div>
+            </div>
+        </div>
+    </div>
+
+<script>
+document.getElementById("predictForm").onsubmit = async function(e){
+    e.preventDefault();
+    const form = e.target;
+    const data = new FormData(form);
+
+    // Reset
+    document.getElementById("results").style.display = "none";
+    document.getElementById("tileImg").src = "";
+    document.getElementById("overlayImg").src = "";
+    document.getElementById("jsonOut").textContent = "";
+
+    const resp = await fetch("/predict", { method: "POST", body: data });
+    const json = await resp.json();
+
+    if(resp.status !== 200){
+        // show error text
+        document.getElementById("results").style.display = "block";
+        document.getElementById("jsonOut").textContent = JSON.stringify(json, null, 4);
+        return;
+    }
+
+    // Display images & json
+    const tileURL = json.tile_image_url || json.tile_image || null;
+    const overlayURL = json.overlay_image_url || json.overlay_image || null;
+
+    if(tileURL) document.getElementById("tileImg").src = tileURL;
+    else document.getElementById("tileImg").alt = "Tile not available";
+
+    if(overlayURL) document.getElementById("overlayImg").src = overlayURL;
+    else document.getElementById("overlayImg").alt = "Overlay not available";
+
+    document.getElementById("jsonOut").textContent = JSON.stringify(json, null, 4);
+    document.getElementById("results").style.display = "block";
+}
+</script>
+</body>
+</html>
