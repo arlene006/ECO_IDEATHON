@@ -1,16 +1,18 @@
-Solar Rooftop Detection – Eco Ideathon 2025 Submission
+# Solar Rooftop Detection – Eco Ideathon 2025 Submission
 
-This repository contains the full pipeline, model, environment setup, and prediction artefacts required for the Solar Rooftop Detection Challenge.
+This repository contains the full pipeline, model, environment setup, and prediction artefacts required for the Solar Rooftop Detection Challenge.  
 The system uses YOLOv8 + ESRI Satellite Tiles + a custom inference pipeline to detect rooftop solar panels, estimate area, and produce the mandated JSON output format.
 
-📁 Repository Structure
+## 📁 Repository Structure
+
+```text
 root/
 ├── backend/
 │   ├── pipeline/
 │   │   ├── __init__.py
+│   │   ├── pipeline_esri.py
 │   │   ├── fetch_tile_esri.py
 │   │   ├── fetch_tile_google.py
-│   │   ├── pipeline_esri.py
 │   │   ├── train_yolo.py
 │   │   └── export_training_logs.py
 │   │
@@ -19,11 +21,15 @@ root/
 │   │   ├── tiles/
 │   │   └── predictions.json
 │   │
-│   ├── runs/detect/solar_detector/
-│   │   └── weights/
-│   │       └── best.pt      ← (Tracked with Git LFS)
+│   ├── runs/
+│   │   └── detect/
+│   │       └── solar_detector/
+│   │           └── weights/
+│   │               └── best.pt
 │   │
-│   ├── static/outputs/
+│   ├── static/
+│   │   └── outputs/
+│   │
 │   ├── templates/
 │   │   └── index.html
 │   │
@@ -45,43 +51,104 @@ root/
 │   └── model_card.pdf
 │
 └── README.md
+```
 
+---
 
-🚀 1. Setup Instructions
-A. Using pip (Recommended)
+## 🚀 Installation
+
+### Using pip
+```bash
 pip install -r environment_details/requirements.txt
+```
 
-B. Using Conda
+### Using Conda
+```bash
 conda env create -f environment_details/environment.yml
 conda activate solar-detection
+```
 
-⚙️ 2. How to Run the Web App
-python pipeline_code/app.py
+---
 
+## 🖥 Run the Web App
 
-This will start the Flask server at:
+```bash
+python backend/app.py
+```
 
-👉 http://127.0.0.1:5000
+Open in browser:
 
-The interface supports:
+```
+http://127.0.0.1:5000
+```
 
-Search by Latitude & Longitude
-Automatic Tile Fetching (ESRI 1024×1024)
-YOLO-based detection
-Overlay image + raw tile image
-Full JSON output
+Features:
+- Latitude/Longitude input
+- ESRI tile fetching
+- YOLOv8 detection
+- Solar panel area estimation
+- Tile + overlay image visualization
+- Complete JSON output
 
-### Batch Inference Output (Submission File)
+---
 
-The final predictions for all samples (3000 rows) are stored in:
+## 📦 Batch Inference (3000 samples)
 
+```bash
+python backend/batch_predict.py
+```
+
+Output stored in:
+
+```
 backend/batch_outputs/predictions.json
+```
 
-This file contains:
-- has_solar prediction
+Format includes:
+- has_solar
 - pv_area_sqm_est
-- confidence score
-- bounding box (if present)
+- confidence
+- bbox_or_mask
 - qc_status
-- tile and overlay image paths
-- metadata
+- tile & overlay paths
+
+---
+
+## 📊 Training Logs
+
+Located in:
+
+```
+backend/training_logs/
+```
+
+Contains:
+- training_metrics.csv  
+- loss_curve.png  
+- f1_curve.png  
+- rmse_per_epoch.csv  
+
+---
+
+## 🧠 Model Card
+
+```
+model_card/model_card.pdf
+```
+
+---
+
+## ✔ Deliverables Summary
+
+| Deliverable | Included | Location |
+|------------|----------|----------|
+| Pipeline Code | ✔ | backend/pipeline |
+| Training Logs | ✔ | backend/training_logs |
+| Model File (YOLO) | ✔ | backend/runs/detect/solar_detector/weights/best.pt |
+| Environment Files | ✔ | environment_details/ |
+| Model Card | ✔ | model_card/model_card.pdf |
+| Predictions JSON | ✔ | backend/batch_outputs/predictions.json |
+| Web App | ✔ | backend/app.py |
+
+---
+
